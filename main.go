@@ -39,11 +39,12 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello World",
+			"message": "Welcome to the Tour of Heroes API",
 		})
 	})
 
 	router.GET("/api/hero", controllers.GetHeroes)
+	router.POST("/api/hero", controllers.CreateHero)
 	// router.GET("/api/hero/:id", getHeroById)
 
 	models.ConnectDatabase()
