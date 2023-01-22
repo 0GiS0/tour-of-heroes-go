@@ -1,18 +1,18 @@
 package main
 
 import (
-	"context"
-	"database/sql"
-	"errors"
-	"fmt"
+	// "context"
+	// "database/sql"
+
 	"log"
-	"net/http"
+	"tour-of-heroes-api-go/controllers"
+	"tour-of-heroes-api-go/models"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/microsoft/go-mssqldb"
+	// _ "github.com/microsoft/go-mssqldb"
 )
 
-var db *sql.DB
+// var db *sql.DB
 
 var server = "localhost"
 var port = 1433
@@ -20,12 +20,12 @@ var user = "sa"
 var password = "Password1!"
 var database = "heroes"
 
-type hero struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	AlterEgo    string `json:"alterEgo"`
-	Description string `json:"description"`
-}
+// type hero struct {
+// 	ID          int    `json:"id"`
+// 	Name        string `json:"name"`
+// 	AlterEgo    string `json:"alterEgo"`
+// 	Description string `json:"description"`
+// }
 
 func main() {
 
@@ -33,85 +33,166 @@ func main() {
 	log.SetFlags(0)
 	log.Print("Connecting to the database")
 
-	ConnectDb()
+	// ConnectDb()
 
 	router := gin.Default()
-	router.GET("/api/hero", getHeroes)
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello World",
+		})
+	})
+
+	router.GET("/api/hero", controllers.GetHeroes)
+	// router.GET("/api/hero/:id", getHeroById)
+
+	models.ConnectDatabase()
 
 	router.Run("localhost:8080")
 }
 
 // Establishes SQL Server connection
-func ConnectDb() {
+// func ConnectDb() {
+// 	db, err := gorm.Open(sqlserver.Open("sqlserver://sa:Password1!@localhost:1433?database=heroes"), &gorm.Config{})
+// 	if err != nil {
+// 		log.Fatal("Error creating connection pool: ", err.Error())
+// 	}
+// 	log.Printf("Connected!\n")
+// }
 
-	// Build connection string
-	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
-		server, user, password, port, database)
+// func ConnectDb() {
 
-	var err error
-	// Create a connection pool
-	db, err = sql.Open("sqlserver", connString)
+// 	// Build connection string
+// 	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
+// 		server, user, password, port, database)
 
-	if err != nil {
-		log.Fatal("Error creating connection pool: ", err.Error())
-	}
+// 	var err error
+// 	// Create a connection pool
+// 	db, err = sql.Open("sqlserver", connString)
 
-	ctx := context.Background()
+// 	if err != nil {
+// 		log.Fatal("Error creating connection pool: ", err.Error())
+// 	}
 
-	err = db.PingContext(ctx)
+// 	ctx := context.Background()
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+// 	err = db.PingContext(ctx)
 
-	log.Printf("Connected!\n")
-}
+// 	if err != nil {
+// 		log.Fatal(err.Error())
+// 	}
 
-func getHeroes(c *gin.Context) {
-	log.Printf("getHeroes")
-	ctx := context.Background()
+// 	log.Printf("Connected!\n")
+// }
 
-	if db == nil {
-		err := errors.New("getHeroes: db is null")
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-	}
+// func getHeroes(c *gin.Context) {
+// 	log.Printf("getHeroes")
+// 	ctx := context.Background()
 
-	// Check if the database is alive
-	err := db.PingContext(ctx)
+// 	if db == nil {
+// 		err := errors.New("getHeroes: db is null")
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
 
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-	}
+// 	// Check if the database is alive
+// 	err := db.PingContext(ctx)
 
-	// Prepare query
-	tsql := fmt.Sprintf("SELECT Id,Name,AlterEgo,Description FROM Heroes;")
+// 	if err != nil {
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
 
-	// Execute query
-	rows, err := db.QueryContext(ctx, tsql)
+// 	// Prepare query
+// 	tsql := fmt.Sprintf("SELECT Id,Name,AlterEgo,Description FROM Heroes;")
 
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-	}
+// 	// Execute query
+// 	rows, err := db.QueryContext(ctx, tsql)
 
-	defer rows.Close()
+// 	if err != nil {
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
 
-	var heroes []hero
+// 	defer rows.Close()
 
-	// Iterate through the result set.
-	for rows.Next() {
-		var name, description, alterEgo string
-		var id int
+// 	var heroes []hero
 
-		// Get values from row.
-		err := rows.Scan(&id, &name, &alterEgo, &description)
-		if err != nil {
-			c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		}
+// 	// Iterate through the result set.
+// 	for rows.Next() {
+// 		var name, description, alterEgo string
+// 		var id int
 
-		fmt.Printf("ID: %d, Name: %s\n", id, name)
-		hero := hero{ID: id, Name: name, AlterEgo: alterEgo, Description: description}
-		heroes = append(heroes, hero)
-	}
+// 		// Get values from row.
+// 		err := rows.Scan(&id, &name, &alterEgo, &description)
+// 		if err != nil {
+// 			c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 		}
 
-	c.IndentedJSON(http.StatusOK, heroes)
-}
+// 		fmt.Printf("ID: %d, Name: %s\n", id, name)
+// 		hero := hero{ID: id, Name: name, AlterEgo: alterEgo, Description: description}
+// 		heroes = append(heroes, hero)
+// 	}
+
+// 	c.IndentedJSON(http.StatusOK, heroes)
+// }
+
+// func getHeroById(c *gin.Context) {
+// 	log.Printf("getHeroById")
+
+// 	id := c.Param("id")
+
+// 	ctx := context.Background()
+
+// 	if db == nil {
+// 		err := errors.New("getHeroes: db is null")
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
+
+// 	// Check if the database is alive
+// 	err := db.PingContext(ctx)
+
+// 	if err != nil {
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
+
+// 	// Prepare query
+// 	tsql := fmt.Sprintf("SELECT Id,Name,AlterEgo,Description FROM Heroes WHERE Id=%v;", id)
+
+// 	log.Print(tsql)
+
+// 	// Execute query
+// 	rows, err := db.Query(tsql)
+
+// 	//Check how many rows were returned
+// 	if rows.Next() == false {
+// 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Hero not found"})
+// 	}
+
+// 	// Check if there are any errors
+// 	if err != nil {
+// 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 	}
+
+// 	defer rows.Close()
+
+// 	// Check how many rows were returned
+// 	if rows.Next() == false {
+// 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Hero not found"})
+// 	}
+
+// 	// Get values from row.
+// 	var name, description, alterEgo string
+// 	var idInt int
+
+// 	for rows.Next() {
+// 		err := rows.Scan(&idInt, &name, &alterEgo, &description)
+// 		if err != nil {
+// 			c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+// 		}
+
+// 		log.Printf("ID: %d, Name: %s\n", idInt, name)
+// 	}
+
+// 	hero := hero{ID: idInt, Name: name, AlterEgo: alterEgo, Description: description}
+
+// 	c.IndentedJSON(http.StatusOK, hero)
+
+// }
