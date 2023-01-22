@@ -82,3 +82,6 @@ content-type: application/json
     "alterEgo": "Peter Parker",
     "description": "un joven huérfano neoyorquino que adquiere superpoderes después de ser mordido por una araña radiactiva,15​ y cuya ideología como héroe se ve reflejada primordialmente en la expresión «un gran poder conlleva una gran responsabilidad».20​21​ Suele ser asociado con una personalidad bromista, amable, inventiva y optimista, lo que le ha llevado a ser catalogado como el «vecino amigable» de cualquiera lo cual, aunado a sus vivencias caracterizadas por los problemas cotidianos."
 }
+
+###
+GET http://localhost:8080/api/hero/1 HTTP/1.1

@@ -31,3 +31,15 @@ func CreateHero(c *gin.Context) {
 
 	c.JSON(http.StatusOK, hero)
 }
+
+// GET /api/hero/:id
+func FindHero(c *gin.Context) {
+	var hero models.Hero
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&hero).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Hero not found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, hero)
+}

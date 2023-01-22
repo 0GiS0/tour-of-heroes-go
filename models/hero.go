@@ -12,3 +12,9 @@ type CreateHeroInput struct {
 	AlterEgo    string `json:"alterEgo" binding:"required"`
 	Description string `json:"description" binding:"required"`
 }
+
+type UpdateHeroInput struct {
+	Name        string `json:"name"`
+	AlterEgo    string `json:"alterEgo"`
+	Description string `json:"description"`
+}

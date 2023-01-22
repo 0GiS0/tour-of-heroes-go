@@ -45,7 +45,7 @@ func main() {
 
 	router.GET("/api/hero", controllers.GetHeroes)
 	router.POST("/api/hero", controllers.CreateHero)
-	// router.GET("/api/hero/:id", getHeroById)
+	router.GET("/api/hero/:id", controllers.FindHero)
 
 	models.ConnectDatabase()
 
