@@ -85,3 +85,17 @@ content-type: application/json
 
 ###
 GET http://localhost:8080/api/hero/1 HTTP/1.1
+
+###
+
+PATCH http://localhost:8080/api/hero/1 HTTP/1.1
+content-type: application/json
+
+{
+    "alterEgo": "Oliver Queen"
+}
+
+###
+
+GET http://localhost:8080/api/hero/1 HTTP/1.1
+
