@@ -29,5 +29,9 @@ func main() {
 
 	models.ConnectDatabase()
 
-	router.Run("localhost:8080")
+	err := router.Run("localhost:8080")
+
+	if err != nil {
+		return
+	}
 }
