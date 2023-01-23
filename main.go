@@ -5,9 +5,13 @@ import (
 	"tour-of-heroes-api-go/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	// Load the .env file in the current directory
+	godotenv.Load()
 
 	router := gin.Default()
 

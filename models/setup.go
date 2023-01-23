@@ -1,6 +1,8 @@
 package models
 
 import (
+	"os"
+
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 )
@@ -9,7 +11,7 @@ var DB *gorm.DB
 
 func ConnectDatabase() {
 
-	database, err := gorm.Open(sqlserver.Open("sqlserver://sa:Password1!@localhost:1433?database=heroes"), &gorm.Config{})
+	database, err := gorm.Open(sqlserver.Open(os.Getenv("DB_CONNECTION_STRING")), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to connect to database!")
