@@ -43,3 +43,25 @@ func FindHero(c *gin.Context) {
 
 	c.JSON(http.StatusOK, hero)
 }
+
+// PATCH /api/hero/:id
+func UpdateHero(c *gin.Context) {
+	// Get model if exist
+	var hero models.Hero
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&hero).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Hero not found!"})
+		return
+	}
+
+	// Validate input
+	var input models.UpdateHeroInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	models.DB.Model(&hero).Updates(input)
+
+	c.JSON(http.StatusOK, hero)
+}
