@@ -21,6 +21,7 @@ func main() {
 	router.POST("/api/hero", controllers.CreateHero)
 	router.GET("/api/hero/:id", controllers.FindHero)
 	router.PATCH("/api/hero/:id", controllers.UpdateHero)
+	router.DELETE("/api/hero/:id", controllers.DeleteHero)
 
 	models.ConnectDatabase()
 

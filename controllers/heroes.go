@@ -65,3 +65,18 @@ func UpdateHero(c *gin.Context) {
 
 	c.JSON(http.StatusOK, hero)
 }
+
+// DELETE /api/hero/:id
+func DeleteHero(c *gin.Context) {
+	//Get model if exist
+	var hero models.Hero
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&hero).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Hero not found!"})
+		return
+	}
+
+	models.DB.Delete(&hero)
+
+	c.JSON(http.StatusOK, true)
+}
