@@ -46,3 +46,9 @@ az webapp config appsettings set \
 --resource-group $RESOURCE_GROUP \
 --name $APP_NAME \
 --settings "DB_CONNECTION_STRING=sqlserver://$SQL_USER_NAME:$SQL_PASSWORD@$SQL_SERVER_NAME.database.windows.net:1433?database=$DB_NAME"
+
+# Browse to the Azure App Service
+az webapp browse --resource-group $RESOURCE_GROUP --name $APP_NAME
+
+# See logs
+az webapp log tail --resource-group $RESOURCE_GROUP --name $APP_NAME
