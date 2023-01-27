@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"tour-of-heroes-api-go/controllers"
 	"tour-of-heroes-api-go/models"
 
@@ -29,7 +31,9 @@ func main() {
 
 	models.ConnectDatabase()
 
-	err := router.Run("localhost:8080")
+	port := os.Getenv("PORT")
+
+	err := router.Run(fmt.Sprintf(":%v", port))
 
 	if err != nil {
 		return
