@@ -24,6 +24,7 @@ func main() {
 	})
 
 	router.GET("/api/hero", controllers.GetHeroes)
+	router.GET("/api/hero/alteregopic/:id", controllers.GetAlterEgoPic)
 	router.POST("/api/hero", controllers.CreateHero)
 	router.GET("/api/hero/:id", controllers.FindHero)
 	router.PATCH("/api/hero/:id", controllers.UpdateHero)
